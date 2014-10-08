@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Jenga_Controller : MonoBehaviour {
 
-	GameObject selected;
+	GameObject selected, previousSelected;
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +26,12 @@ public class Jenga_Controller : MonoBehaviour {
 
 	public void SetSelection (GameObject block)
 	{
-		Debug.Log ("" + block.transform.position.ToString ());
+		previousSelected = selected;
+		selected = block;
+
+		previousSelected.renderer.materials [0].color = Color.gray;
+		selected.renderer.materials [0].color = Color.red;
+
+		Debug.Log ("" + selected.transform.position.ToString ());
 	}
 }
