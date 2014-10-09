@@ -26,6 +26,7 @@ public class Jenga_SetUpBlocks : MonoBehaviour {
 		for (int i = 0; i < size; ++i)
 		{
 			blocks[i] = (GameObject) Instantiate(jengaBlock);
+			blocks[i].renderer.materials [0].color = Color.Lerp(Color.red, Color.cyan, ((float) (i/3)) * 0.05882353f);
 			blocks[i].transform.parent = transform;
 			tempVec3 = blocks[i].transform.position;
 			if ((i/3)%2 == 0)

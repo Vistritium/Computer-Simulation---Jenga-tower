@@ -26,12 +26,14 @@ public class Jenga_Controller : MonoBehaviour {
 
 	public void SetSelection (GameObject block)
 	{
-		previousSelected = selected;
-		selected = block;
+		//previousSelected = selected;
+		//selected = block;
 
-		previousSelected.renderer.materials [0].color = Color.gray;
-		selected.renderer.materials [0].color = Color.red;
+		//previousSelected.renderer.materials [0].color = Color.gray;
+		//selected.renderer.materials [0].color = Color.red;
 
-		Debug.Log ("" + selected.transform.position.ToString ());
+		//Debug.Log ("" + selected.transform.position.ToString ());
+
+		Destroy (block);
 	}
 }
