@@ -7,10 +7,13 @@ public class Jenga_SetUpBlocks : MonoBehaviour {
 
 	private GameObject[] blocks;
 
+	Color[] colorList;
+
 	// Use this for initialization
 	void Start () {
 		int size = 54;
 		blocks = new GameObject [size];
+		colorList = new Color[] {Color.red, Color.green, Color.blue, Color.red};//, Color.cyan, Color.magenta};
 		SetUpBlocks (size);
 	}
 	
@@ -22,11 +25,16 @@ public class Jenga_SetUpBlocks : MonoBehaviour {
 	void SetUpBlocks(int size)
 	{
 		Vector3 tempVec3;
+		int CLLenght = colorList.Length - 1;
+
+		int num = size / CLLenght;//(size / (CLLenght - 2)) - 1;
 
 		for (int i = 0; i < size; ++i)
 		{
 			blocks[i] = (GameObject) Instantiate(jengaBlock);
-			blocks[i].renderer.materials [0].color = Color.Lerp(Color.red, Color.cyan, ((float) (i/3)) * 0.05882353f);
+			Debug.Log(i.ToString() + "\n");
+			blocks[i].renderer.materials [0].color = Color.Lerp(colorList[i/num], colorList[(i/num) +1], (((float) (i%(size / CLLenght)))/ ((float)(size / CLLenght))));//(((float) i) / (54 / colorList.Length) -  ((float) i ) % (((float) i )/ colorList.Length )) );
+
 			blocks[i].transform.parent = transform;
 			tempVec3 = blocks[i].transform.position;
 			if ((i/3)%2 == 0)

@@ -5,9 +5,11 @@ public class Jenga_Controller : MonoBehaviour {
 
 	GameObject selected, previousSelected;
 
+	float actualHeight;
+
 	// Use this for initialization
 	void Start () {
-	
+		actualHeight = 25.5f;
 	}
 	
 	// Update is called once per frame
@@ -27,13 +29,15 @@ public class Jenga_Controller : MonoBehaviour {
 	public void SetSelection (GameObject block)
 	{
 		//previousSelected = selected;
-		//selected = block;
+		selected = block;
+		actualHeight += 1.5f;
+		selected.transform.position = new Vector3 (1, actualHeight, 0);
 
 		//previousSelected.renderer.materials [0].color = Color.gray;
 		//selected.renderer.materials [0].color = Color.red;
 
 		//Debug.Log ("" + selected.transform.position.ToString ());
 
-		Destroy (block);
+		//Destroy (block);
 	}
 }
