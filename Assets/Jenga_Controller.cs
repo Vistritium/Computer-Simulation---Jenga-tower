@@ -31,7 +31,18 @@ public class Jenga_Controller : MonoBehaviour {
 		//previousSelected = selected;
 		selected = block;
 		actualHeight += 1.5f;
+		int rotate = ( (int)(actualHeight / 1.5f))%2;
+		selected.transform.rotation = new Quaternion ();
+		if (rotate == 1)
+		{
+			selected.transform.Rotate(new Vector3(0,90,0));
+		}
+		else
+		{
+
+		}
 		selected.transform.position = new Vector3 (1, actualHeight, 0);
+
 
 		//previousSelected.renderer.materials [0].color = Color.gray;
 		//selected.renderer.materials [0].color = Color.red;
