@@ -9,6 +9,7 @@ public class Camera_Controller : MonoBehaviour {
 	float ySpeed = .1f;
 	float wSpeed = 1.5f;
 
+
 	private float 	x = 0.0f, prevX = 0f,
 					y = 0.0f, prevY = 0f;
 
@@ -32,21 +33,21 @@ public class Camera_Controller : MonoBehaviour {
 			rightclicked = false;
 		}
 
-		if (Input.GetMouseButton(2)){
+/*		if (Input.GetMouseButton(2)){
 			middleclicked = true;
 		}
 		else{
 			middleclicked = false;
-		}
+		}*/
 
 		if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
 		{
-			distance -= wSpeed;
+			distance += wSpeed;
 			
 		}
 		if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
 		{
-			distance += wSpeed;
+			distance -= wSpeed;
 		}
 
 		// Keyboard manipulation
@@ -85,7 +86,7 @@ public class Camera_Controller : MonoBehaviour {
 		}
 		else
 		{
-			transform.position = transform.rotation * new Vector3(0.0f, 0.0f, -distance) + tPos;
+			//transform.position = transform.rotation * new Vector3(0.0f, 0.0f, -distance) + tPos;
 		}
 
 		if (middleclicked == true)

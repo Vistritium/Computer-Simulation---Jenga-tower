@@ -1,54 +1,194 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using Assets;
+using UnityEngine;
 using System.Collections;
 
 public class Jenga_Controller : MonoBehaviour {
 
-	GameObject selected, previousSelected;
+    enum State
+    {
+        ToSelect,
+        Selected
+    }
 
-	float actualHeight;
+    private State state;
 
-	// Use this for initialization
+    private Action<GameObject> onObjectSelected;
+
+    
+
+	private GameObject selected, previousSelected;
+    private Color oldColor;
+
+    private Jenga_SetUpBlocks jengaSetUpBlocks;
+    List<GameObject> blocks;
+    List<Vector2> pointsAvailibleForPlacing = new List<Vector2>(); 
+
+    // Use this for initialization
 	void Start () {
-		actualHeight = 25.5f;
+        state = State.ToSelect;
+	    jengaSetUpBlocks = GetComponent<Jenga_SetUpBlocks>();
+        blocks = jengaSetUpBlocks.blockList;
+	    SetUpPointsAvailibleForPlacing();
 	}
+
+    void SetUpPointsAvailibleForPlacing()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if(i == 4) continue;
+            var jengaBlockPos = blocks[i].transform.position;
+            var newAvailiblePos = new Vector2(jengaBlockPos.x, jengaBlockPos.z);
+            pointsAvailibleForPlacing.Add(newAvailiblePos);
+        }
+        
+    }
+
+    Vector2 FindCLosestAvailiblePos(Vector2 pos)
+    {
+        return pointsAvailibleForPlacing.Aggregate(pointsAvailibleForPlacing[0], (aggregate, current) =>
+        {
+            var aggDistance = Vector2.Distance(aggregate, pos);
+            var currentDistance = Vector2.Distance(current, pos);
+            if (currentDistance < aggDistance)
+            {
+                return current;
+            }
+            else
+            {
+                return aggregate;
+            }
+        });
+    }
+
+    
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetMouseButtonDown(0))
-		{
-			RaycastHit hit = new RaycastHit();
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			
-			if (Physics.Raycast (ray, out hit, 100.0f))
-			{  
-				SetSelection(hit.collider.gameObject);
-			}
-		}
+	    switch (state)
+	    {
+	        case State.ToSelect:
+                UpdateStateToSelect();
+	            break;
+	        case State.Selected:
+                UpdateStateSelected();
+	            break;
+	        default:
+	            throw new ArgumentOutOfRangeException();
+	    }
 	}
 
-	public void SetSelection (GameObject block)
-	{
-		//previousSelected = selected;
-		selected = block;
-		actualHeight += 1.5f;
-		int rotate = ( (int)(actualHeight / 1.5f))%2;
-		selected.transform.rotation = new Quaternion ();
-		if (rotate == 1)
-		{
-			selected.transform.Rotate(new Vector3(0,90,0));
-		}
-		else
-		{
+    Vector3 FindHighestFreeAtPosition(Vector3 position)
+    {
+        float distance = 120.0f;
+        RaycastHit hit = new RaycastHit();
+        Ray ray = new Ray(position + Vector3.up * distance, Vector3.down);
 
-		}
-		selected.transform.position = new Vector3 (1, actualHeight, 0);
+        if (Physics.Raycast(ray, out hit, distance))
+        {
+            var hitObj = hit.collider.gameObject;
+            return hit.point + Vector3.up*hitObj.transform.localScale.y*0.5f;// + Vector3.up * 0.1f;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+        
+
+    }
+
+    void UpdateStateSelected()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+           
+            selected.collider.gameObject.renderer.materials[0].color = oldColor;
+            SwitchState(State.ToSelect);
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            selected.transform.Rotate(Vector3.up, 90.0f);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            selected.collider.enabled = true;
+            selected.rigidbody.detectCollisions = true;
+            selected.rigidbody.useGravity = true;
+            SwitchState(State.ToSelect);
+            return;
+            //copySelected.SetActive(false);
+            // copySelected.rigidbody.detectCollisions = false;
+        }
+
+        RayCast(hit =>
+        {
+            var newPosition = hit.point;
+            var d2NewAvailiblePos = FindCLosestAvailiblePos(new Vector2(newPosition.x, newPosition.z));
+            selected.transform.position = FindHighestFreeAtPosition(new Vector3(d2NewAvailiblePos.x, 0, d2NewAvailiblePos.y));
+            
+            selected.collider.gameObject.renderer.materials[0].color = oldColor;
+            
+            //Destroy(copySelected);
+            //SwitchState(State.ToSelect);
+
+        });
+    }
+
+    void UpdateStateToSelect()
+    {
+        MouseRaycastCheck(hit =>
+        {
+            
+            selected = hit.collider.gameObject;
+            if (selected.tag == "JengaBlock")
+            {
+                oldColor = selected.collider.gameObject.renderer.materials[0].color;
+                selected.collider.gameObject.renderer.materials[0].color = Color.black;
+                SwitchState(State.Selected);
+                selected.collider.enabled = false;
+                selected.rigidbody.detectCollisions = false;
+                selected.rigidbody.useGravity = false;
+                //copySelected.SetActive(false);
+                //copySelected.rigidbody.detectCollisions = false;
+            }
+        });
+    }
 
 
-		//previousSelected.renderer.materials [0].color = Color.gray;
-		//selected.renderer.materials [0].color = Color.red;
+    void SwitchState(State state)
+    {
+        this.state = state;
+    }
 
-		//Debug.Log ("" + selected.transform.position.ToString ());
+    private static void RayCast(Action<RaycastHit> onRaycastHit)
+    {
+        RaycastHit hit = new RaycastHit();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-		//Destroy (block);
-	}
+        if (Physics.Raycast(ray, out hit, 100.0f))
+        {
+            onRaycastHit.Invoke(hit);
+        }
+    }
+
+    private static void MouseRaycastCheck(Action<RaycastHit> onRaycastHit)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit = new RaycastHit();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit, 100.0f))
+            {
+                onRaycastHit.Invoke(hit);
+            }
+        }
+    }
+
 }

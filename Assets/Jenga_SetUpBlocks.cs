@@ -1,16 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using System.Collections;
 
 public class Jenga_SetUpBlocks : MonoBehaviour {
 
 	public GameObject jengaBlock;
 
-	private GameObject[] blocks;
+	public GameObject[] blocks;
+
+    public List<GameObject> blockList = new List<GameObject>();
 
 	Color[] colorList;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		int size = 54;
 		blocks = new GameObject [size];
 		colorList = new Color[] {Color.red, Color.green, Color.blue, Color.red};//, Color.cyan, Color.magenta};
@@ -31,7 +34,9 @@ public class Jenga_SetUpBlocks : MonoBehaviour {
 
 		for (int i = 0; i < size; ++i)
 		{
-			blocks[i] = (GameObject) Instantiate(jengaBlock);
+		    var newBlock = (GameObject) Instantiate(jengaBlock);
+		    blocks[i] = newBlock;
+            blockList.Add(newBlock);
 			Debug.Log(i.ToString() + "\n");
 			blocks[i].renderer.materials [0].color = Color.Lerp(colorList[i/num], colorList[(i/num) +1], (((float) (i%(size / CLLenght)))/ ((float)(size / CLLenght))));//(((float) i) / (54 / colorList.Length) -  ((float) i ) % (((float) i )/ colorList.Length )) );
 
