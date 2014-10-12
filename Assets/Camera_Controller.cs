@@ -6,12 +6,14 @@ public class Camera_Controller : MonoBehaviour {
 	float distance = 25.0f;
 
 	float xSpeed = .4f;
-	float ySpeed = .04f;
-	float wSpeed = .4f;
+	float ySpeed = .1f;
+	float wSpeed = 1.5f;
 
-	private float x = 0.0f, prevX = 0f;
+	private float 	x = 0.0f, prevX = 0f,
+					y = 0.0f, prevY = 0f;
 
 	bool rightclicked = false;
+	bool middleclicked = false;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +30,13 @@ public class Camera_Controller : MonoBehaviour {
 		}
 		else{
 			rightclicked = false;
+		}
+
+		if (Input.GetMouseButton(2)){
+			middleclicked = true;
+		}
+		else{
+			middleclicked = false;
 		}
 
 		if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
@@ -62,7 +71,9 @@ public class Camera_Controller : MonoBehaviour {
 		Vector3 tPos = new Vector3(0, transform.position.y, 0);
 
 		prevX = x;
+		prevY = y;
 		x = Input.mousePosition.x;
+		y = Input.mousePosition.y;
 
 		if (rightclicked == true) {
 
@@ -76,5 +87,13 @@ public class Camera_Controller : MonoBehaviour {
 		{
 			transform.position = transform.rotation * new Vector3(0.0f, 0.0f, -distance) + tPos;
 		}
+
+		if (middleclicked == true)
+		{
+			Vector3 tempV = transform.position;
+			tempV.y += (y-prevY)*ySpeed;
+			transform.position = tempV;
+		}
+
 	}
 }
