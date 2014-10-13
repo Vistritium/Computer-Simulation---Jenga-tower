@@ -120,18 +120,20 @@ public class Jenga_Controller : MonoBehaviour {
             selected.collider.enabled = true;
             selected.rigidbody.detectCollisions = true;
             selected.rigidbody.useGravity = true;
+			selected.rigidbody.isKinematic = false;
             SwitchState(State.ToSelect);
             return;
             //copySelected.SetActive(false);
             // copySelected.rigidbody.detectCollisions = false;
         }
+		selected.rigidbody.isKinematic = true;
 
         RayCast(hit =>
         {
             var newPosition = hit.point;
             var d2NewAvailiblePos = FindCLosestAvailiblePos(new Vector2(newPosition.x, newPosition.z));
             selected.transform.position = FindHighestFreeAtPosition(new Vector3(d2NewAvailiblePos.x, 0, d2NewAvailiblePos.y));
-            
+
             selected.collider.gameObject.renderer.materials[0].color = oldColor;
             
             //Destroy(copySelected);
@@ -154,6 +156,8 @@ public class Jenga_Controller : MonoBehaviour {
                 selected.collider.enabled = false;
                 selected.rigidbody.detectCollisions = false;
                 selected.rigidbody.useGravity = false;
+				selected.rigidbody.isKinematic = true;
+				selected.transform.rotation = new Quaternion ();
                 //copySelected.SetActive(false);
                 //copySelected.rigidbody.detectCollisions = false;
             }
