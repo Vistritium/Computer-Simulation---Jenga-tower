@@ -33,12 +33,12 @@ public class Camera_Controller : MonoBehaviour {
 			rightclicked = false;
 		}
 
-/*		if (Input.GetMouseButton(2)){
+		if (Input.GetMouseButton(2)){
 			middleclicked = true;
 		}
 		else{
 			middleclicked = false;
-		}*/
+		}
 
 		if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
 		{

@@ -115,18 +115,22 @@ public class Jenga_Controller : MonoBehaviour {
             selected.transform.Rotate(Vector3.up, 90.0f);
         }
 
+		SetProperRotation();
         if (Input.GetMouseButtonDown(0))
         {
             selected.collider.enabled = true;
             selected.rigidbody.detectCollisions = true;
             selected.rigidbody.useGravity = true;
 			selected.rigidbody.isKinematic = false;
+			//SetProperRotation();
             SwitchState(State.ToSelect);
+
             return;
             //copySelected.SetActive(false);
             // copySelected.rigidbody.detectCollisions = false;
         }
 		selected.rigidbody.isKinematic = true;
+		//SetProperRotation();
 
         RayCast(hit =>
         {
@@ -144,10 +148,12 @@ public class Jenga_Controller : MonoBehaviour {
 
     void UpdateStateToSelect()
     {
-        MouseRaycastCheck(hit =>
+        
+		MouseRaycastCheck(hit =>
         {
             
             selected = hit.collider.gameObject;
+
             if (selected.tag == "JengaBlock")
             {
                 oldColor = selected.collider.gameObject.renderer.materials[0].color;
@@ -195,4 +201,16 @@ public class Jenga_Controller : MonoBehaviour {
         }
     }
 
+	void SetProperRotation() //to Selected
+	{
+		if ( ((int)(selected.transform.position.y / 1.5f))%2 == 1 )
+		{
+			selected.transform.rotation = new Quaternion();
+		}
+		else
+		{
+			selected.transform.rotation = new Quaternion();
+			selected.transform.Rotate( new Vector3(0, 90, 0));
+		}
+	}
 }
