@@ -24,7 +24,7 @@ public class Jenga_Controller : MonoBehaviour {
     private Color oldColor;
 
     private Jenga_SetUpBlocks jengaSetUpBlocks;
-    List<GameObject> blocks;
+    public List<GameObject> blocks;
     List<Vector2> pointsAvailibleForPlacing = new List<Vector2>(); 
 
     // Use this for initialization
