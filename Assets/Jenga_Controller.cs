@@ -27,6 +27,9 @@ public class Jenga_Controller : MonoBehaviour {
     public List<GameObject> blocks;
     List<Vector2> pointsAvailibleForPlacing = new List<Vector2>(); 
 
+	public bool canMove = true, blockPicked = false;
+	public int moveIterator = 0;
+
     // Use this for initialization
 	void Start () {
         state = State.ToSelect;
@@ -68,7 +71,13 @@ public class Jenga_Controller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    switch (state)
+	    
+		if (canMove == false)
+		{
+			return;
+		}
+
+		switch (state)
 	    {
 	        case State.ToSelect:
                 UpdateStateToSelect();
@@ -102,7 +111,8 @@ public class Jenga_Controller : MonoBehaviour {
 
     void UpdateStateSelected()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+		blockPicked = true;
+		if (Input.GetKeyDown(KeyCode.Q))
         {
            
             selected.collider.gameObject.renderer.materials[0].color = oldColor;
@@ -124,6 +134,8 @@ public class Jenga_Controller : MonoBehaviour {
 			selected.rigidbody.isKinematic = false;
 			//SetProperRotation();
             SwitchState(State.ToSelect);
+			++moveIterator;
+			blockPicked = false;
 
             return;
             //copySelected.SetActive(false);

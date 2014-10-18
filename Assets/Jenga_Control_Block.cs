@@ -4,15 +4,18 @@ using System.Collections;
 public class Jenga_Control_Block : MonoBehaviour {
 
 	public Jenga_Controller jc;
-	public float redTreshold = 4f;
+	public float treshold = 4f;
 	public float controler;
+
+	public bool passedOnce = false;
 
 	private float multiplier;
 
 
 	// Use this for initialization
 	void Start () {
-		multiplier = 1f / redTreshold;
+		multiplier = 1f / treshold;
+		passedOnce = false;
 	}
 	
 	// Update is called once per frame
@@ -53,6 +56,11 @@ public class Jenga_Control_Block : MonoBehaviour {
 		}
 		controler = max;
 		max *= multiplier;
+
+		if ( controler >= max )
+		{
+			passedOnce = true;
+		}
 
 		renderer.materials [0].color = Color.Lerp(Color.green, Color.red, max);
 	}
