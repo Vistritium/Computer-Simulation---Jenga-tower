@@ -8,10 +8,10 @@ namespace Assets
     public static class NowickiUtils
     {
 
-        private static Random rng = new Random();
-        public static T PickRandom<T>(List<T> list)
+        private static Random rnd = new Random();
+        public static T Random<T>(this List<T> list)
         {
-            return list[rng.Next(list.Count)];
+            return list[rnd.Next(list.Count)];
         }
     }
 }

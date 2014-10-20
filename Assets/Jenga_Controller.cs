@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Assets;
 using UnityEngine;
 using System.Collections;
@@ -90,24 +91,7 @@ public class Jenga_Controller : MonoBehaviour {
 	    }
 	}
 
-    Vector3 FindHighestFreeAtPosition(Vector3 position)
-    {
-        float distance = 120.0f;
-        RaycastHit hit = new RaycastHit();
-        Ray ray = new Ray(position + Vector3.up * distance, Vector3.down);
 
-        if (Physics.Raycast(ray, out hit, distance))
-        {
-            var hitObj = hit.collider.gameObject;
-            return hit.point + Vector3.up*hitObj.transform.localScale.y*0.5f;// + Vector3.up * 0.1f;
-        }
-        else
-        {
-            return Vector3.zero;
-        }
-        
-
-    }
 
     void UpdateStateSelected()
     {
@@ -124,6 +108,8 @@ public class Jenga_Controller : MonoBehaviour {
         {
             selected.transform.Rotate(Vector3.up, 90.0f);
         }
+
+        
 
 		SetProperRotation();
         if (Input.GetMouseButtonDown(0))
@@ -148,7 +134,7 @@ public class Jenga_Controller : MonoBehaviour {
         {
             var newPosition = hit.point;
             var d2NewAvailiblePos = FindCLosestAvailiblePos(new Vector2(newPosition.x, newPosition.z));
-            selected.transform.position = FindHighestFreeAtPosition(new Vector3(d2NewAvailiblePos.x, 0, d2NewAvailiblePos.y));
+            selected.transform.position = JengaTowerUtils.FindHighestFreeAtPosition(new Vector3(d2NewAvailiblePos.x, 0, d2NewAvailiblePos.y));
 
             selected.collider.gameObject.renderer.materials[0].color = oldColor;
             
