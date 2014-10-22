@@ -6,12 +6,34 @@ using System.Collections;
 
 public class Jenga_Game : MonoBehaviour {
 
-	public class Player {
-		public int id;
+	public abstract class Player {
+		public static int idCounter;
+		public int id = idCounter++;
 		public bool enabled;
 
-		public Player(int ID) { id = ID; enabled = false; }
+		public Player() { enabled = false; }
+
+		abstract public void Turn ();
 	};
+
+	public class AiPlayer : Player {
+		public AiPlayer() : base(){}
+
+		public override void Turn ()
+		{
+			GameObject.Find ("AI").GetComponent<AiRunner> ().Turn ();
+			GameObject.Find ("Jenga_Blocks_Controller").GetComponent<Jenga_Controller> ().moveIterator++;
+		}
+	}
+
+	public class HumanPlayer : Player {
+		public HumanPlayer(): base(){}
+
+		public override void Turn ()
+		{
+
+		}
+	}
 
 	public List<Player> Players;
 
@@ -30,7 +52,7 @@ public class Jenga_Game : MonoBehaviour {
 
 	private string	strPlayerNumber = "";
 
-	private bool	editingEnded = false;
+	private bool	editingEnded = false, firstUpdate = true;
 
 	// Use this for initialization
 	void Start () {
@@ -42,17 +64,14 @@ public class Jenga_Game : MonoBehaviour {
 
 		Players = new List<Player> ();
 
-		for (int i = 0; i < PlayerNumber; ++i)
-		{
-			Players.Add(new Player(i));
-			//Players[i].id = i;
-		}
-
 		strPlayer = strPlayerBegin_Human + "0";
 		strGame = strGame_Moving;
 
+		jc.toInvokeOnNewTurn.Add (this.newTurn);
+		
 	}
-	
+
+
 	// Update is called once per frame
 	void Update () {
 
@@ -60,6 +79,21 @@ public class Jenga_Game : MonoBehaviour {
 		{
 			jc.canMove = false;
 			return;
+		}
+		else
+		{
+			if (firstUpdate == true) {
+				firstUpdate = false;
+				for (int i = 0; i < PlayerNumber - ComputerPlayers; ++i)
+				{
+					Players.Add(new HumanPlayer());
+				}
+				
+				for (int i=0; i<ComputerPlayers; i++)
+				{
+					Players.Add(new AiPlayer());
+				}
+			}
 		}
 
 		if (jcb.controler >= jcb.treshold)
@@ -85,13 +119,19 @@ public class Jenga_Game : MonoBehaviour {
 
 	}
 
+	public void newTurn(){
+		var currentPlayerNumber = jc.moveIterator % PlayerNumber;
+		var currentPlayer = Players[currentPlayerNumber];
+		currentPlayer.Turn ();
+	}
+
 	void OnGUI() {
 
 		if (editingEnded == false) 
 		{
 			GUI.Box (new Rect (10,10,140,190), "Preparing game");
 
-			#region PlatyerNumber
+			#region PlayerNumber
 
 			GUI.Box ( new Rect (15,45,130,50), "Number of players" );
 			GUI.TextField (new Rect (20, 70, 40, 20), PlayerNumber.ToString());

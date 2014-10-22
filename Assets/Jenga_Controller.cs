@@ -29,7 +29,21 @@ public class Jenga_Controller : MonoBehaviour {
     List<Vector2> pointsAvailibleForPlacing = new List<Vector2>(); 
 
 	public bool canMove = true, blockPicked = false;
-	public int moveIterator = 0;
+	private int MoveIterator = 0;
+
+	public int moveIterator {
+		get {
+			return MoveIterator;
+		}
+		set {
+			if(MoveIterator != value){
+				MoveIterator = value;
+				toInvokeOnNewTurn.ForEach(x => x.Invoke());
+			}
+		}
+	}
+
+	public List<Action> toInvokeOnNewTurn = new List<Action>();
 
     // Use this for initialization
 	void Start () {
