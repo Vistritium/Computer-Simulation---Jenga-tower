@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
-using Assets;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DebugGui : MonoBehaviour
+namespace Assets
 {
-    private JengaTower jengaTower;
-    private string textAreaString = "0";
-
-
-    // Use this for initialization
-    private void Start()
+    public class DebugGui : MonoBehaviour
     {
-        var jengaSetUpBlocks = GetComponent<Jenga_SetUpBlocks>();
-        jengaTower = new JengaTower(jengaSetUpBlocks.blockList);
-    }
+        private JengaTower jengaTower;
+        private string textAreaString = "0";
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
 
-    private void OnGUI()
-    {
+        // Use this for initialization
+        private void Start()
+        {
+            var jengaSetUpBlocks = GameObject.Find("Jenga_Blocks_Controller").GetComponent<Jenga_SetUpBlocks>();
+            jengaTower = new JengaTower(jengaSetUpBlocks.blockList);
+        }
+
+        // Update is called once per frame
+        private void Update()
+        {
+        }
+
+        private void OnGUI()
+        {
 /*        string tempAreString =
             GUI.TextArea(new Rect(Screen.width*0.9f, Screen.height*0.05f, Screen.width*0.1f, Screen.height*0.05f),
                 textAreaString);
@@ -32,11 +32,14 @@ public class DebugGui : MonoBehaviour
         }*/
 
 
-        if (GUI.Button(new Rect(Screen.width*0.9f, 0, Screen.width*0.1f, Screen.height*0.05f), "DebugButton"))
-        {
-            GameObject.Find("AI").GetComponent<AiRunner>().Turn();
-            //List<GameObject> blockToDebug = GameObject.Find("AI").GetComponent<BlockSelector>().GetAllValidBlocks();
-            //blockToDebug.ForEach(x => x.renderer.material.color = Color.blue);
+            if (GUI.Button(new Rect(Screen.width*0.9f, 0, Screen.width*0.1f, Screen.height*0.05f), "DebugButton"))
+            {
+                GameObject.Find("AI").GetComponent<BlockPlacer>().DrawPlacesToConsider();
+                
+                //GameObject.Find("AI").GetComponent<AiRunner>().Turn();
+                //List<GameObject> blockToDebug = GameObject.Find("AI").GetComponent<BlockSelector>().GetAllValidBlocks();
+                //blockToDebug.ForEach(x => x.renderer.material.color = Color.blue);
+            }
         }
     }
 }
