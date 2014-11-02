@@ -46,21 +46,34 @@ namespace Assets
 
         public void PlaceObject(GameObject jengaBlock)
         {
-            var jengaStartPosition = Vector3.zero;//magic number just like SOMEONE did in jenga tower creation
+            List<Vector3> placesToConsider = GetPlacesToConsider();
+            var lowest = placesToConsider.Aggregate((agg, next) =>
+            {
+                if (agg.y < next.y)
+                    return agg;
+                return next;
+            });
+
+            jengaBlock.transform.position = lowest;
+            JengaTowerUtils.SetProperRotation(jengaBlock);
+            JengaTowerUtils.SetProperPosition(jengaBlock);
+        }
+
+        private static void PlacePrimitiveTop(GameObject jengaBlock)
+        {
+            var jengaStartPosition = Vector3.zero; //magic number just like SOMEONE did in jenga tower creation
             Vector3 highestFreeAtPosition = JengaTowerUtils.FindHighestFreeAtPosition(jengaStartPosition);
 
-            
 
             highestFreeAtPosition.x += 1;
 
             jengaBlock.transform.rotation = new Quaternion();
-            if ( ((int)(highestFreeAtPosition.y / 1.5f))%2 == 0 )
+            if (((int) (highestFreeAtPosition.y/1.5f))%2 == 0)
             {
-                jengaBlock.transform.Rotate( new Vector3(0, 90, 0));
+                jengaBlock.transform.Rotate(new Vector3(0, 90, 0));
             }
 
             jengaBlock.transform.position = highestFreeAtPosition;
         }
-
     }
 }

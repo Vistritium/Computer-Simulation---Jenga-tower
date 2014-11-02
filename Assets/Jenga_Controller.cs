@@ -108,7 +108,7 @@ namespace Assets
             }
 
 
-            SetProperRotation();
+            JengaTowerUtils.SetProperRotation(selected);
            
             if (Input.GetMouseButtonDown(0))
             {
@@ -136,7 +136,7 @@ namespace Assets
                     JengaTowerUtils.FindHighestFreeAtPosition(new Vector3(d2NewAvailiblePos.x, 0, d2NewAvailiblePos.y));
 
                 selected.collider.gameObject.renderer.materials[0].color = oldColor;
-                SetProperPosition();
+                JengaTowerUtils.SetProperPosition(selected);
                 //Destroy(copySelected);
                 //SwitchState(State.ToSelect);
             });
@@ -197,40 +197,7 @@ namespace Assets
         }
 
 
-        private void SetProperPosition()
-        {
-            Vector3 position = new Vector3(selected.transform.position.x - 1, selected.transform.position.y, selected.transform.position.z);
-            Debug.Log(string.Format("Current position is {0} {1} {2}", Math.Round(position.x, 2), Math.Round(position.y), Math.Round(position.z)));
-            if (((int) (position.y/1.5f))%2 == 1)
-            {
-                if (position.x > 2f || position.x < -2f)
-                {
-                    selected.transform.position = new Vector3(1, position.y, position.z);
-                    
-                }
-            }
-            else
-            {
-                if (position.z > 2f || position.z < -2f)
-                {
-                    selected.transform.position = new Vector3(position.x + 1, position.y, 0);
-                    Debug.Log("2");
-                }
-            }
-        }
 
-        private void SetProperRotation() //to Selected
-        {
-            if (((int) (selected.transform.position.y/1.5f))%2 == 1)
-            {
-                selected.transform.rotation = new Quaternion();
-            }
-            else
-            {
-                selected.transform.rotation = new Quaternion();
-                selected.transform.Rotate(new Vector3(0, 90, 0));
-            }
-        }
 
         private enum State
         {
