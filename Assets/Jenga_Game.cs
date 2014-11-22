@@ -230,7 +230,7 @@ namespace Assets
 					foreach ( var i in AIModes ){
 						str += i.ToString() + " # ";
 					}
-					Debug.Log (str);
+				//	Debug.Log (str);
 				}
 			}
 			else

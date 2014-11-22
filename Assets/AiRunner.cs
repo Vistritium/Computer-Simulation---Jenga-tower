@@ -16,8 +16,12 @@ namespace Assets
 
         public void Turn()
         {
-            GameObject aiJengaObject = blockSelector.GetAiJengaObject();
-            blockPlacer.PlaceObject(aiJengaObject);
+            this.DeferAction(0.3f, () =>
+            {
+                GameObject aiJengaObject = blockSelector.GetAiJengaObject();
+                blockPlacer.PlaceObject(aiJengaObject);
+            });
+
         }
 
         // Update is called once per frame
