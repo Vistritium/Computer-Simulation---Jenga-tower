@@ -34,13 +34,21 @@ namespace Assets
 
         }
 
-
+		System.Random random = new System.Random();
         public List<GameObject> GetAllValidBlocks()
         {
             List<List<GameObject>> levelGroupedBlocks = getLevelGroupedBlocks();
 
             //remove top blocks
-            levelGroupedBlocks.RemoveAt(levelGroupedBlocks.Count - 2);
+			levelGroupedBlocks.RemoveAt(levelGroupedBlocks.Count - 1);
+            levelGroupedBlocks.RemoveAt(levelGroupedBlocks.Count - 1);
+
+//			var color = new Color ((float)random.NextDouble (), (float)random.NextDouble (), (float)random.NextDouble ());
+//			levelGroupedBlocks.ForEach (x => {
+//				x.ForEach( y => {
+//					y.renderer.material.color = color;
+//					});
+//				});
 
             List<List<GameObject>> only3Blocks = levelGroupedBlocks.Where(x => x.Count == 3).ToList();
 

@@ -26,6 +26,7 @@ namespace Assets
 	
         }
 
+
         void SetUpBlocks(int size)
         {
             Vector3 tempVec3;
@@ -38,6 +39,7 @@ namespace Assets
                 var newBlock = (GameObject) Instantiate(jengaBlock);
                 blocks[i] = newBlock;
                 blockList.Add(newBlock);
+
                 blocks[i].renderer.materials [0].color = Color.Lerp(colorList[i/num], colorList[(i/num) +1], (((float) (i%(size / CLLenght)))/ ((float)(size / CLLenght))));//(((float) i) / (54 / colorList.Length) -  ((float) i ) % (((float) i )/ colorList.Length )) );
 
                 blocks[i].transform.parent = transform;
