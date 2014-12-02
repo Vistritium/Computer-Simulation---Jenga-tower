@@ -117,9 +117,11 @@ namespace Assets
 
                 strPlayer = "L : " + PlayerRace(temp) + temp.ToString();
                 strGame = strGame_GameOver;
+                Jenga_Controller.GameFinished = true;
             } 
             else 
             {
+                Jenga_Controller.GameFinished = false;
                 jc.canMove = true;
                 strGame = strGame_Moving;
                 strPlayer = (PlayerRace(jc.moveIterator % PlayerNumber)) + (jc.moveIterator % PlayerNumber).ToString ();

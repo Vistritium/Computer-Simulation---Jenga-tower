@@ -21,6 +21,7 @@ namespace Assets
         private State state;
 
         public List<Action> toInvokeOnNewTurn = new List<Action>();
+        public static bool GameFinished = false;
 
         public int moveIterator
         {
@@ -110,7 +111,7 @@ namespace Assets
 
             JengaTowerUtils.SetProperRotation(selected);
            
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || GameFinished)
             {
                 selected.collider.enabled = true;
                 selected.rigidbody.detectCollisions = true;
