@@ -74,6 +74,11 @@ namespace Assets
         // Update is called once per frame
         private void Update()
         {
+            if (GameFinished && state == State.Selected)
+            {
+                FinishSelection();
+            }
+
             if (canMove == false)
             {
                 return;
@@ -111,16 +116,10 @@ namespace Assets
 
             JengaTowerUtils.SetProperRotation(selected);
            
-            if (Input.GetMouseButtonDown(0) || GameFinished)
+            
+            if (Input.GetMouseButtonDown(0))
             {
-                selected.collider.enabled = true;
-                selected.rigidbody.detectCollisions = true;
-                selected.rigidbody.useGravity = true;
-                selected.rigidbody.isKinematic = false;
-                //SetProperRotation();
-                SwitchState(State.ToSelect);
-                ++moveIterator;
-                blockPicked = false;
+                FinishSelection();
 
                 return;
                 //copySelected.SetActive(false);
@@ -142,6 +141,18 @@ namespace Assets
                 //SwitchState(State.ToSelect);
             });
             
+        }
+
+        private void FinishSelection()
+        {
+            selected.collider.enabled = true;
+            selected.rigidbody.detectCollisions = true;
+            selected.rigidbody.useGravity = true;
+            selected.rigidbody.isKinematic = false;
+            //SetProperRotation();
+            SwitchState(State.ToSelect);
+            ++moveIterator;
+            blockPicked = false;
         }
 
         private void UpdateStateToSelect()

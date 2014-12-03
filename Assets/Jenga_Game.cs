@@ -62,9 +62,13 @@ namespace Assets
         private string	strPlayerNumber = "";
 
         private bool	editingEnded = false, firstUpdate = true;
+        private float gravValue;
 
         // Use this for initialization
-        void Start () {
+        void Start ()
+        {
+            jcb = GameObject.Find("Control_Block").GetComponent<Jenga_Control_Block>();
+            gravValue = -Physics.gravity.y;
             if (ComputerPlayers > PlayerNumber)
             {
                 ComputerPlayers = PlayerNumber;
@@ -141,6 +145,14 @@ namespace Assets
 			
 			if (editingEnded == false) 
 			{
+                GUIStyle thumb = new GUIStyle(GUI.skin.horizontalSliderThumb);
+			    GUIStyle slider = new GUIStyle(GUI.skin.horizontalSlider);
+			    slider.fixedHeight = Screen.height*0.1f;
+			    thumb.fixedHeight = slider.fixedHeight;
+			    thumb.fixedWidth = slider.fixedHeight;
+			    gravValue = GUI.HorizontalSlider(new Rect(Screen.width * 0.2f, 20, Screen.width * 0.4f, 200f), gravValue, 5.0F, 200.0F, slider, thumb);
+                GUI.TextField(new Rect(Screen.width * 0.2f, 20 + slider.fixedHeight, Screen.width * 0.1f, Screen.height * 0.05f), "Gravity: " + -gravValue);
+                Physics.gravity = new Vector3(0,-gravValue,0);
 				
 				if ( AIModes.ToArray().Length < ComputerPlayers ) {
 					for (int i = AIModes.ToArray().Length; i < ComputerPlayers; ++i)
